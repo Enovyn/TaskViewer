@@ -1,0 +1,103 @@
+ <!DOCTYPE html>
+ <html>
+
+ <head>
+    <title>Trello API</title>
+
+//has to include jquery and the trello client for javascript
+ <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+ <script src="https://api.trello.com/1/client.js?key=337f74f542955e35b985e52805c28641"></script>
+
+</head>
+
+
+<body>
+   <script>
+      var authenticationSuccess = function() {
+	  console.log('Successful authentication'); };
+      var authenticationFailure = function() {
+	  alert('Failed authentication'); };
+
+//Authorization
+function connectToTrello(){
+	Trello.authorize({
+      type: 'redirect',
+      name: 'Getting Started Application',
+      scope: {
+      read: true,
+      write: true },
+      expiration: 'never',
+      success: authenticationSuccess,
+      error: authenticationFailure
+      });};
+</script>
+	  
+<button type = "button" onclick="connectToTrello()">Authorize</button>
+
+<br>
+<br>
+
+<button type = "button" onclick="getBoards()">Get Boards</button>
+
+<br>
+<br>
+
+<button type = "button" onclick="get19Board()">Get 19 Board Cards</button>
+
+<br>
+<br>
+
+<button type = "button" onclick="testen()">TEST</button>
+
+<script>
+
+var myList = 'https://trello.com/c/BUjSMAaP/1-testen.json';
+
+var creationSuccess = function (data) {
+  console.log('Operation successful');
+  console.log(JSON.stringify(data, null, 2));
+  //document.writeln(JSON.stringify(data, null, 2));
+};
+
+var creationFail = function (){
+alert('Aktion konnte nicht ausgefuehrt werden. Fragt nicht Yvonne warum es nicht geht, die weiss es auch nicht.');
+};
+
+var newCard = {
+  name: 'New Test Card', 
+  desc: 'This is the description of our new card.',
+  // Place this card at the top of our list 
+  idList: myList,
+  pos: 'top'
+};
+   
+
+var addCard = function (){
+	//Trello.get("/cards/", newCard, creationSuccess, creationFail);
+    //window.Trello.post("cards", { name: "Card created for test", desc: "this is a test",  idList: myList, due: today, urlSource: thisUrl});
+};
+
+function getBoards(){
+	window.Trello.get("members/me/boards", creationSuccess, creationFail);
+};
+ 
+function get19Board(){
+	window.Trello.get("boards/5b9624316fe620864ed57162/labels", creationSuccess, creationFail);
+};
+
+//function testen(){
+//	window.Trello.get("boards/5b9624316fe620864ed57162/cards", {fields:"name,labels"}, creationSuccess, creationFail);
+//};
+
+function testen(){
+	window.Trello.get("/search?modelTypes=cards", creationSuccess, creationFail);
+};
+
+</script>
+
+</body>
+
+</html>
