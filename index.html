@@ -92,8 +92,13 @@ function get19Board(){
 //	window.Trello.get("boards/5b9624316fe620864ed57162/cards", {fields:"name,labels"}, creationSuccess, creationFail);
 //};
 
+//function testen(){
+//	window.Trello.get("/search?modelTypes=cards", creationSuccess, creationFail);
+//};
+	
+//gets all cards with pink label	
 function testen(){
-	window.Trello.get("/search?modelTypes=cards", creationSuccess, creationFail);
+	window.Trello.get("search?query=label:pink&idBoards=5b9624316fe620864ed57162&modelTypes=cards&card_fields=name&cards_limit=100&boards_fields=name", creationSuccess, creationFail);
 };
 
 </script>
