@@ -22,8 +22,7 @@
 	  alert('Failed authentication'); };
 
 //Authorization
-function connectToTrello(){
-	Trello.authorize({
+	window.Trello.authorize({
       type: 'redirect',
       name: 'Getting Started Application',
       scope: {
@@ -32,13 +31,9 @@ function connectToTrello(){
       expiration: 'never',
       success: authenticationSuccess,
       error: authenticationFailure
-      });};
+      });
 </script>
 	  
-<button type = "button" onclick="connectToTrello()">Authorize</button>
-
-<br>
-<br>
 
 <button type = "button" onclick="getBoards()">Get Boards</button>
 
@@ -51,34 +46,26 @@ function connectToTrello(){
 <br>
 
 <button type = "button" onclick="testen()">TEST</button>
+	
+<ul id="demo"  style="font-size:160%"></ul>
 
 <script>
-
-var myList = 'https://trello.com/c/BUjSMAaP/1-testen.json';
-
-var creationSuccess = function (data) {
+var Obj = [];
+var i;
+	
+var getSuccess = function (data) {
   console.log('Operation successful');
-  console.log(JSON.stringify(data, null, 2));
-  //document.writeln(JSON.stringify(data, null, 2));
+  $("button").remove();
+for(i = 0; i < data.cards.length; i++){
+  Obj = Obj.concat("<li>" + data.cards[i].name + "</li>");
+}
+document.getElementById('demo').innerHTML=Obj.join("");
 };
 
 var creationFail = function (){
 alert('Aktion konnte nicht ausgefuehrt werden. Fragt nicht Yvonne warum es nicht geht, die weiss es auch nicht.');
 };
 
-var newCard = {
-  name: 'New Test Card', 
-  desc: 'This is the description of our new card.',
-  // Place this card at the top of our list 
-  idList: myList,
-  pos: 'top'
-};
-   
-
-var addCard = function (){
-	//Trello.get("/cards/", newCard, creationSuccess, creationFail);
-    //window.Trello.post("cards", { name: "Card created for test", desc: "this is a test",  idList: myList, due: today, urlSource: thisUrl});
-};
 
 function getBoards(){
 	window.Trello.get("members/me/boards", creationSuccess, creationFail);
@@ -88,17 +75,10 @@ function get19Board(){
 	window.Trello.get("boards/5b9624316fe620864ed57162/labels", creationSuccess, creationFail);
 };
 
-//function testen(){
-//	window.Trello.get("boards/5b9624316fe620864ed57162/cards", {fields:"name,labels"}, creationSuccess, creationFail);
-//};
-
-//function testen(){
-//	window.Trello.get("/search?modelTypes=cards", creationSuccess, creationFail);
-//};
 	
 //gets all cards with pink label	
 function testen(){
-	window.Trello.get("search?query=label:pink&idBoards=5b9624316fe620864ed57162&modelTypes=cards&card_fields=name&cards_limit=100&boards_fields=name", creationSuccess, creationFail);
+	window.Trello.get("search?query=label:pink&idBoards=5b9624316fe620864ed57162&modelTypes=cards&card_fields=name&cards_limit=100&boards_fields=name", getSuccess, creationFail);
 };
 
 </script>
