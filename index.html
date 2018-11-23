@@ -103,16 +103,13 @@ var getSuccess = function (data) {
 
 var getSuccessLists = function (data) {
   console.log('Operation successful: get Lists');
-  //console.log(JSON.stringify(data, null, 2));
-  //for(i = 0; i < data.cards.length; i++){
-  //document.write(data.cards[i].name);
-  //} 
+  
   
   
   $("button").remove();
 for(i = 0; i < data.length; i++){
   lists_id[i] = data[i].id;
-  lists_name = lists_name.concat("<li>" + data[i].name + "</li>");
+  lists_name = lists_name.concat(data[i].name);
 }
 	window.Trello.get("search?query=label:pink&idBoards=5b9624316fe620864ed57162&modelTypes=cards&card_fields=name,idList&cards_limit=100", getSuccessCards, getFail);
 } 
@@ -120,15 +117,7 @@ for(i = 0; i < data.length; i++){
  
 var getSuccessCards = function (data) {
   console.log('Operation successful: get Cards');
- //console.log(JSON.stringify(data, null, 2));  
- // $("button").remove();
-/*for(i = 0; i < data.cards.length; i++){
-  labeled_cards = labeled_cards.concat("<li>" + data.cards[i].name + "</li>");
-  lists_cards = lists_cards.concat("<li>" + data.cards[i].idList + "</li>");
-}*/
 
-//document.getElementById('demo').innerHTML=lists_cards.join("");
-//document.body.innerHTML = "";
 Taskviewer(data);
 }
 
@@ -173,13 +162,9 @@ if(j == 11){
 list11 = list11.concat("<li>" + data.cards[i].name + "</li>");
 }
 
-//filled_lists[j] = filled_lists[j].concat("<li>" + data.cards[i].name + "</li>");
-//output = output.concat("<li>" + data.cards[i].name + "</li>");
 }
 }
-//document.getElementById('demo').innerHTML=output.join("");
-//document.write(output.join(""));
-//output = [];
+
 }
 
 Ausgabe();
