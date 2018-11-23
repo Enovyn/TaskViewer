@@ -1,27 +1,89 @@
  <!DOCTYPE html>
  <html>
 
- <head>
+   <head>
     <title>Trello API</title>
 
-//has to include jquery and the trello client for javascript
  <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
  <script src="https://api.trello.com/1/client.js?key=337f74f542955e35b985e52805c28641"></script>
+	</head>
 
-</head>
 
 
 <body>
-   <script>
-      var authenticationSuccess = function() {
-	  console.log('Successful authentication'); };
-      var authenticationFailure = function() {
+	  
+<!-- <button type = "button" onclick="connectToTrello()">Authorize</button> -->
+
+<!-- <button type = "button" onclick="getBoards()">Get Boards</button> -->
+
+<!-- <button type = "button" onclick="get19Board()">Get 19 Board Cards</button> -->
+
+<button type = "button" onclick="testen()">Test</button>
+
+<h1 id="liste">TEST</h1>
+
+<ul id="demo0"  style="font-size:160%"></ul>
+
+<ul id="demo1"  style="font-size:160%"></ul>
+
+<ul id="demo2"  style="font-size:160%"></ul>
+
+<ul id="demo3"  style="font-size:160%"></ul>
+
+<ul id="demo4"  style="font-size:160%"></ul>
+
+<ul id="demo5"  style="font-size:160%"></ul>
+
+<ul id="demo6"  style="font-size:160%"></ul>
+
+<ul id="demo7"  style="font-size:160%"></ul>
+
+<ul id="demo8"  style="font-size:160%"></ul>
+
+<ul id="demo9"  style="font-size:160%"></ul>
+
+<ul id="demo10"  style="font-size:160%"></ul>
+
+<ul id="demo11"  style="font-size:160%"></ul>
+
+<!-- style="list-style-type:none" -->
+
+<script>
+
+
+var labeled_cards = [];
+var lists_cards = [];
+var lists_id = [];
+var lists_name = [];
+
+//var filled_lists = ["list1", "list2", "list3", "list4", "list5", "list6", "list7", "list8", "list9", "list10", "list11" ,"list12"]
+var list0 = [];
+var list1 = [];
+var list2 = [];
+var list3 = [];
+var list4 = [];
+var list5 = [];
+var list6 = [];
+var list7 = [];
+var list8 = [];
+var list9 = [];
+var list10 = [];
+var list11 = [];
+
+var output = [];
+
+var i, j = 0;
+
+var authenticationSuccess = function() {
+	  console.log('Successful authentication'); 
+	  };
+var authenticationFailure = function() {
 	  alert('Failed authentication'); };
 
-//Authorization
+//function connectToTrello(){
 	window.Trello.authorize({
       type: 'redirect',
       name: 'Getting Started Application',
@@ -32,40 +94,166 @@
       success: authenticationSuccess,
       error: authenticationFailure
       });
-</script>
-	  
-
-<button type = "button" onclick="getBoards()">Get Boards</button>
-
-<br>
-<br>
-
-<button type = "button" onclick="get19Board()">Get 19 Board Cards</button>
-
-<br>
-<br>
-
-<button type = "button" onclick="testen()">TEST</button>
-	
-<ul id="demo"  style="font-size:160%"></ul>
-
-<script>
-var Obj = [];
-var i;
+	  //};
 	
 var getSuccess = function (data) {
-  console.log('Operation successful');
+  console.log('Operation successful: get Lists');
+  console.log(JSON.stringify(data, null, 2));
+}  
+
+var getSuccessLists = function (data) {
+  console.log('Operation successful: get Lists');
+  //console.log(JSON.stringify(data, null, 2));
+  //for(i = 0; i < data.cards.length; i++){
+  //document.write(data.cards[i].name);
+  //} 
+  
+  
   $("button").remove();
-for(i = 0; i < data.cards.length; i++){
-  Obj = Obj.concat("<li>" + data.cards[i].name + "</li>");
+for(i = 0; i < data.length; i++){
+  lists_id[i] = data[i].id;
+  lists_name = lists_name.concat("<li>" + data[i].name + "</li>");
 }
-document.getElementById('demo').innerHTML=Obj.join("");
+	window.Trello.get("search?query=label:pink&idBoards=5b9624316fe620864ed57162&modelTypes=cards&card_fields=name,idList&cards_limit=100", getSuccessCards, getFail);
+} 
+ 
+ 
+var getSuccessCards = function (data) {
+  console.log('Operation successful: get Cards');
+ //console.log(JSON.stringify(data, null, 2));  
+ // $("button").remove();
+/*for(i = 0; i < data.cards.length; i++){
+  labeled_cards = labeled_cards.concat("<li>" + data.cards[i].name + "</li>");
+  lists_cards = lists_cards.concat("<li>" + data.cards[i].idList + "</li>");
+}*/
+
+//document.getElementById('demo').innerHTML=lists_cards.join("");
+//document.body.innerHTML = "";
+Taskviewer(data);
+}
+
+function Taskviewer(data){
+for(j = 0; j <lists_id.length; j++){
+for(i = 0; i < data.cards.length; i++){
+if(lists_id[j]==data.cards[i].idList){
+if(j == 0){
+list0 = list0.concat("<li>" + data.cards[i].name + "</li>");
+}
+if(j == 1){
+list1 = list1.concat("<li>" + data.cards[i].name + "</li>");
+}
+if(j == 2){
+list2 = list2.concat("<li>" + data.cards[i].name + "</li>");
+}
+if(j == 3){
+list3 = list3.concat("<li>" + data.cards[i].name + "</li>");
+}
+if(j == 4){
+list4 = list4.concat("<li>" + data.cards[i].name + "</li>");
+}
+if(j == 5){
+list5 = list5.concat("<li>" + data.cards[i].name + "</li>");
+}
+if(j == 6){
+list6 = list6.concat("<li>" + data.cards[i].name + "</li>");
+}
+if(j == 7){
+list7 = list7.concat("<li>" + data.cards[i].name + "</li>");
+}
+if(j == 8){
+list8 = list8.concat("<li>" + data.cards[i].name + "</li>");
+}
+if(j == 9){
+list9 = list9.concat("<li>" + data.cards[i].name + "</li>");
+}
+if(j == 10){
+list10 = list10.concat("<li>" + data.cards[i].name + "</li>");
+}
+if(j == 11){
+list11 = list11.concat("<li>" + data.cards[i].name + "</li>");
+}
+
+//filled_lists[j] = filled_lists[j].concat("<li>" + data.cards[i].name + "</li>");
+//output = output.concat("<li>" + data.cards[i].name + "</li>");
+}
+}
+//document.getElementById('demo').innerHTML=output.join("");
+//document.write(output.join(""));
+//output = [];
+}
+
+Ausgabe();
+}
+
+
+var Ausgabe = function(){
+for(i = 0; i < 12; i++){
+document.getElementById("demo"+i).style.display = "none";
+}
+document.getElementById("demo0").innerHTML=list0.join("");
+document.getElementById("demo1").innerHTML=list1.join("");
+document.getElementById("demo2").innerHTML=list2.join("");
+document.getElementById("demo3").innerHTML=list3.join("");
+document.getElementById("demo4").innerHTML=list4.join("");
+document.getElementById("demo5").innerHTML=list5.join("");
+document.getElementById("demo6").innerHTML=list6.join("");
+document.getElementById("demo7").innerHTML=list7.join("");
+document.getElementById("demo8").innerHTML=list8.join("");
+document.getElementById("demo9").innerHTML=list9.join("");
+document.getElementById("demo10").innerHTML=list10.join("");
+document.getElementById("demo11").innerHTML=list11.join("");
+i = 0;
+startDisplay();
+}
+
+var startDisplay = function() {
+    document.getElementById("demo"+i).style.display = "block";
+	window.setTimeout(stopDisplay, 1000);
+	console.log(i);
+	document.getElementById("liste").innerHTML=lists_name[i];
+	
+} 
+
+var stopDisplay = function() {
+    document.getElementById("demo"+i).style.display = "none";
+	if(i < 11){
+	i++;
+	startDisplay();
+	}
+	else if(i >= 11){
+	reset();
+	testen();
+	}
+}
+
+var testen = function(){
+	Trello.get("boards/5b9624316fe620864ed57162/lists/open", getSuccessLists, getFail);
+	//window.Trello.get("search?query=label:pink&idBoards=5b9624316fe620864ed57162&modelTypes=cards&card_fields=name,idList&cards_limit=100", getSuccess, getFail);
 };
 
-var creationFail = function (){
+var reset = function(){
+list0 = [];
+list1 = [];
+list2 = [];
+list3 = [];
+list4 = [];
+list5 = [];
+list6 = [];
+list7 = [];
+list8 = [];
+list9 = [];
+list10 = [];
+list11 = [];
+
+labeled_cards = [];
+lists_cards = [];
+lists_id = [];
+lists_name = [];
+}
+
+var getFail = function (){
 alert('Aktion konnte nicht ausgefuehrt werden. Fragt nicht Yvonne warum es nicht geht, die weiss es auch nicht.');
 };
-
 
 function getBoards(){
 	window.Trello.get("members/me/boards", creationSuccess, creationFail);
@@ -75,14 +263,19 @@ function get19Board(){
 	window.Trello.get("boards/5b9624316fe620864ed57162/labels", creationSuccess, creationFail);
 };
 
-	
-//gets all cards with pink label	
-function testen(){
-	window.Trello.get("search?query=label:pink&idBoards=5b9624316fe620864ed57162&modelTypes=cards&card_fields=name&cards_limit=100&boards_fields=name", getSuccess, creationFail);
-};
+//LabelID:5bf2c10de162ca3fefd93ef2
 
-</script>
+function sleep(milliseconds){
+	var start = new Date().getTime();
+		for(var z = 0; z < 1e7; z++){
+			if((new Date().getTime() - start) > milliseconds){
+				break;
+			}
+		}
+	}
 
-</body>
-
-</html>
+	  </script>
+	  
+	 </body>
+  
+  </html>
