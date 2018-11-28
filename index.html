@@ -1,7 +1,7 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
  <html>
 
-<head>
+   <head>
     <title>Trello API</title>
 
  <script
@@ -16,17 +16,37 @@
     left: 300px;
     top: 500px;
 }
+
+	#checkliste {
+    position: absolute;
+    left: 650px;
+	top: 60px;
+}
+
+	#sonstiges {
+    position: absolute;
+    left: 650px;
+	top: 0px;
+}
 </style>
 	
-</head>
+	
+	
+	</head>
 
 
 
 <body>
 	  
-<button type = "button" onclick="testen()">Test</button>
+<!-- <button type = "button" onclick="connectToTrello()">Authorize</button> -->
 
-<h1 id="liste" style="font-size:200%">TEST</h1>
+<!-- <button type = "button" onclick="getBoards()">Get Boards</button> -->
+
+<!-- <button type = "button" onclick="get19Board()">Get 19 Board Cards</button> -->
+
+<button type = "button" onclick="undLos()">Starten</button>
+
+<h1 id="liste" style="font-size:200%">Start</h1>
 
 <ul id="demo0"  style="font-size:200%"></ul>
 
@@ -52,6 +72,10 @@
 
 <ul id="demo11"  style="font-size:200%"></ul>
 
+<h1 id="sonstiges" style="font-size:200%">Sonstige Aufgaben</h1>
+
+<ul id="checkliste"  style="font-size:200%"></ul>
+
 <p id="design_freeze"  style="font-size:300%;color:red"></p>
 
 
@@ -60,6 +84,7 @@
 
 var lists_id = [];
 var lists_name = [];
+
 
 var list0 = [];
 var list1 = [];
@@ -75,6 +100,7 @@ var list10 = [];
 var list11 = [];
 
 var output = [];
+var check = [];
 
 var i, j = 0;
 
@@ -98,10 +124,11 @@ var authenticationFailure = function() {
     });
 	
 	
-var testen = function(){
+var undLos = function(){
 	Trello.get("boards/5b9624316fe620864ed57162/lists/open", getSuccessLists, getFailLists);
 	var d = new Date();
 	document.getElementById("design_freeze").innerHTML=(days_between(freeze_date, d) + " Tage bis zum Design Freeze");
+	getChecklist();
 };
 	
 var getSuccess = function (data) {
@@ -197,7 +224,7 @@ startDisplay();
 }
 
 var startDisplay = function() {
-   	document.getElementById("demo"+i).style.display = "block";
+    document.getElementById("demo"+i).style.display = "block";
 	document.getElementById("liste").innerHTML=lists_name[i];
 	window.setTimeout(stopDisplay, 1000);
 } 
@@ -210,7 +237,7 @@ var stopDisplay = function() {
 	}
 	else if(i >= 11){
 	reset();
-	testen();
+	undLos();
 	}
 }
 
@@ -229,11 +256,21 @@ list9 = [];
 list10 = [];
 list11 = [];
 
-labeled_cards = [];
-lists_cards = [];
 lists_id = [];
 lists_name = [];
+check = [];
 }
+
+var getSuccessChecklist = function (data) {
+	console.log('Operation successful: get Checklist');
+	
+	for(i = 0; i < data.length; i++){
+		if(data[i].state=='incomplete'){
+				check = check.concat("<li>" + data[i].name + "</li>");
+			}
+		}
+		document.getElementById("checkliste").innerHTML=check.join("");
+	}
 
 var getFailLists = function (){
 alert('Listen konnten nicht geholt werden. Fragt nicht Yvonne warum es nicht geht, die weiss es auch nicht.');
@@ -243,14 +280,19 @@ var getFailCards = function (){
 alert('Karten konnten nicht geholt werden. Fragt nicht Yvonne warum es nicht geht, die weiss es auch nicht.');
 };
 
+function getChecklist(){
+	window.Trello.get("checklists/5ba10b75be21e366252565b3/checkItems/", getSuccessChecklist, getFailCards);
+};
+
 function getBoards(){
 	window.Trello.get("members/me/boards", creationSuccess, creationFail);
 };
  
 function get19Board(){
-	window.Trello.get("boards/5b9624316fe620864ed57162/labels", creationSuccess, creationFail);
+	window.Trello.get("boards/5b9624316fe620864ed57162/cards", getSuccess, getFailCards);
 };
 
+//LabelID:5bf2c10de162ca3fefd93ef2
 var freeze_date = new Date(2018, 11, 2, 12, 0, 0, 0, 0);
 
 function days_between(date1, date2) {
@@ -274,4 +316,4 @@ function days_between(date1, date2) {
 	  
 	 </body>
   
-  </html>
+  </html> 
