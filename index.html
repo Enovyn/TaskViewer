@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
  <html>
 
    <head>
@@ -13,7 +13,7 @@
 <style>	
 	p {
     position: absolute;
-    left: 300px;
+    left: 200px;
     top: 500px;
 }
 
@@ -28,6 +28,15 @@
     left: 650px;
 	top: 0px;
 }
+
+
+@font-face {
+   font-family: GoodTime;
+   src: url(GOODTIME.ttf);
+}
+
+
+
 </style>
 	
 	
@@ -36,54 +45,54 @@
 
 
 
-<body>
+<body bgcolor="black", text = "white">
 	  
-<!-- <button type = "button" onclick="connectToTrello()">Authorize</button> -->
-
-<!-- <button type = "button" onclick="getBoards()">Get Boards</button> -->
-
-<!-- <button type = "button" onclick="get19Board()">Get 19 Board Cards</button> -->
+<button type = "button" onclick="get19Board()">Get 19 Board Cards</button>
 
 <button type = "button" onclick="undLos()">Starten</button>
 
-<h1 id="liste" style="font-size:200%">Start</h1>
+<div style="width:600px">
 
-<ul id="demo0"  style="font-size:200%"></ul>
+<h1 id="liste" style="font-size:170%;font-family:GoodTime">Start</h1>
 
-<ul id="demo1"  style="font-size:200%"></ul>
+<ul id="demo0"  style="font-size:170%"></ul>
 
-<ul id="demo2"  style="font-size:200%"></ul>
+<ul id="demo1"  style="font-size:170%"></ul>
 
-<ul id="demo3"  style="font-size:200%"></ul>
+<ul id="demo2"  style="font-size:170%"></ul>
 
-<ul id="demo4"  style="font-size:200%"></ul>
+<ul id="demo3"  style="font-size:170%"></ul>
 
-<ul id="demo5"  style="font-size:200%"></ul>
+<ul id="demo4"  style="font-size:170%"></ul>
 
-<ul id="demo6"  style="font-size:200%"></ul>
+<ul id="demo5"  style="font-size:170%"></ul>
 
-<ul id="demo7"  style="font-size:200%"></ul>
+<ul id="demo6"  style="font-size:170%"></ul>
 
-<ul id="demo8"  style="font-size:200%"></ul>
+<ul id="demo7"  style="font-size:170%"></ul>
 
-<ul id="demo9"  style="font-size:200%"></ul>
+<ul id="demo8"  style="font-size:170%"></ul>
 
-<ul id="demo10"  style="font-size:200%"></ul>
+<ul id="demo9"  style="font-size:170%"></ul>
 
-<ul id="demo11"  style="font-size:200%"></ul>
+<ul id="demo10"  style="font-size:170%"></ul>
 
-<h1 id="sonstiges" style="font-size:200%">Sonstige Aufgaben</h1>
+<ul id="demo11"  style="font-size:170%"></ul>
 
-<ul id="checkliste"  style="font-size:200%"></ul>
+</div>
 
-<p id="design_freeze"  style="font-size:300%;color:red"></p>
+<h1 id="sonstiges" style="font-size:170%;font-family:GoodTime">Sonstige Aufgaben</h1>
 
+<ul id="checkliste"  style="font-size:170%"></ul>
+
+<p id="design_freeze"  style="font-size:300%;color:rgb(165, 009, 020);font-family:GoodTime"></p>
 
 <script>
 
-
 var lists_id = [];
 var lists_name = [];
+
+var cards_id = [];
 
 
 var list0 = [];
@@ -101,8 +110,53 @@ var list11 = [];
 
 var output = [];
 var check = [];
+var content = [];
 
-var i, j = 0;
+var i, j, c = 0;
+
+var freeze_date = new Date(2018, 11, 2, 23, 59, 59, 59, 59);
+
+//COUNTDOWN
+// Set the date we're counting down to
+var countDownDate = freeze_date.getTime();
+
+// Update the count down every 1 minutes
+function countdown(){setInterval(function() {
+//var countdown = function(){
+
+  // Get todays date and time
+  var now = new Date().getTime();
+
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var t;
+  if(days == 1){t=' Tag '}
+  else{t =' Tage '};
+ 
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var h;
+  if(hours == 1){h=' Stunde '}
+  else{h =' Stunden '};
+  
+  var minutes = Math.ceil((distance % (1000 * 60 * 60)) / (1000 * 60));
+  
+  var m;
+  if(minutes == 1){m =' Minute '}
+  else{m =' Minuten '};
+
+  // Display the result in the element with id="design_freeze"
+  document.getElementById("design_freeze").innerHTML = days + t + hours + h + minutes + m + "<br>BIS DESIGN FREEZE";
+
+  // If the count down is finished, write some text 
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("design_freeze").innerHTML = "ENDE";
+  }
+},1000);};
+
 
 var authenticationSuccess = function() {
 	  console.log('Successful authentication'); 
@@ -127,8 +181,9 @@ var authenticationFailure = function() {
 var undLos = function(){
 	Trello.get("boards/5b9624316fe620864ed57162/lists/open", getSuccessLists, getFailLists);
 	var d = new Date();
-	document.getElementById("design_freeze").innerHTML=(days_between(freeze_date, d) + " Tage bis zum Design Freeze");
-	getChecklist();
+	//document.getElementById("design_freeze").innerHTML=(days_between(freeze_date, d) + " Tage bis zum Design Freeze");
+	countdown();
+	getSonstiges();
 };
 	
 var getSuccess = function (data) {
@@ -144,7 +199,7 @@ for(i = 0; i < data.length; i++){
 	lists_id[i] = data[i].id;
 	lists_name = lists_name.concat(data[i].name);
 }
-	window.Trello.get("search?query=label:pink&idBoards=5b9624316fe620864ed57162&modelTypes=cards&card_fields=name,idList,closed&cards_limit=100", getSuccessCards, getFailCards);
+	window.Trello.get("search?query=label:pink&idBoards=5b9624316fe620864ed57162&modelTypes=cards&card_fields=name,idList,closed,idChecklists&cards_limit=100", getSuccessCards, getFailCards);
 } 
  
  
@@ -153,47 +208,55 @@ var getSuccessCards = function (data) {
 	Taskviewer(data);
 }
 
+var test = [];
+
 function Taskviewer(data){
 for(j = 0; j <lists_id.length; j++){
 	for(i = 0; i < data.cards.length; i++){
 		if(data.cards[i].closed==false){
 			if(lists_id[j]==data.cards[i].idList){
+				//if(data.cards[i].name == 'General'){test=test.concat(j); 
+				//Trello.get("cards/" + data.cards[i].id + "/checklists", getSuccessChecklists, getFailChecklists);
+				//}
+				content = content.concat("<li>" + data.cards[i].name + "</li>");
 				if(j == 0){
-				list0 = list0.concat("<li>" + data.cards[i].name + "</li>");
+				list0 = list0.concat(content);
 				}
 				if(j == 1){
-				list1 = list1.concat("<li>" + data.cards[i].name + "</li>");
+				list1 = list1.concat(content);
 				}
 				if(j == 2){
-				list2 = list2.concat("<li>" + data.cards[i].name + "</li>");
+				list2 = list2.concat(content);
 				}
 				if(j == 3){
-				list3 = list3.concat("<li>" + data.cards[i].name + "</li>");
+				list3 = list3.concat(content);
 				}
 				if(j == 4){
-				list4 = list4.concat("<li>" + data.cards[i].name + "</li>");
+				list4 = list4.concat(content);
 				}
 				if(j == 5){
-				list5 = list5.concat("<li>" + data.cards[i].name + "</li>");
+				list5 = list5.concat(content);
 				}
 				if(j == 6){
-				list6 = list6.concat("<li>" + data.cards[i].name + "</li>");
+				list6 = list6.concat(content);
 				}
 				if(j == 7){
-				list7 = list7.concat("<li>" + data.cards[i].name + "</li>");
+				list7 = list7.concat(content);
 				}
 				if(j == 8){
-				list8 = list8.concat("<li>" + data.cards[i].name + "</li>");
+				list8 = list8.concat(content);
 				}
 				if(j == 9){
-				list9 = list9.concat("<li>" + data.cards[i].name + "</li>");
+				list9 = list9.concat(content);
 				}
 				if(j == 10){
-				list10 = list10.concat("<li>" + data.cards[i].name + "</li>");
+				list10 = list10.concat(content);
 				}
 				if(j == 11){
-				list11 = list11.concat("<li>" + data.cards[i].name + "</li>");
+				list11 = list11.concat(content);
 				}
+				content = [];
+				
 			}
 		}
 	}
@@ -261,7 +324,7 @@ lists_name = [];
 check = [];
 }
 
-var getSuccessChecklist = function (data) {
+var getSuccessSonstiges = function (data) {
 	console.log('Operation successful: get Checklist');
 	
 	for(i = 0; i < data.length; i++){
@@ -272,6 +335,19 @@ var getSuccessChecklist = function (data) {
 		document.getElementById("checkliste").innerHTML=check.join("");
 	}
 
+var getSuccessChecklists = function (data) {
+	console.log('Operation successful: get Checklist');
+	
+	for(c = 0; c < data[0].checkItems.length; c++){
+		if(data[0].checkItems[c].state=='incomplete'){
+				content = content.concat("<li>" + data[0].checkItems[c].name + "</li>");
+				//console.log(JSON.stringify(data[0].checkItems[c].name, null, 2));
+				console.log(test);
+				console.log(data[0].checkItems.length);
+		}
+		}
+	}
+
 var getFailLists = function (){
 alert('Listen konnten nicht geholt werden. Fragt nicht Yvonne warum es nicht geht, die weiss es auch nicht.');
 };
@@ -280,8 +356,14 @@ var getFailCards = function (){
 alert('Karten konnten nicht geholt werden. Fragt nicht Yvonne warum es nicht geht, die weiss es auch nicht.');
 };
 
-function getChecklist(){
-	window.Trello.get("checklists/5ba10b75be21e366252565b3/checkItems/", getSuccessChecklist, getFailCards);
+var getFailChecklists = function (){
+alert('Checklisten konnten nicht geholt werden. Fragt nicht Yvonne warum es nicht geht, die weiss es auch nicht.');
+};
+
+
+
+function getSonstiges(){
+	window.Trello.get("checklists/5ba10b75be21e366252565b3/checkItems/", getSuccessSonstiges, getFailCards);
 };
 
 function getBoards(){
@@ -290,30 +372,11 @@ function getBoards(){
  
 function get19Board(){
 	window.Trello.get("boards/5b9624316fe620864ed57162/cards", getSuccess, getFailCards);
+	//{window.Trello.get("cards/5ba3a0abd1c1cb792a82fece/checklists", getSuccess, getFailChecklists)}
 };
-
-//LabelID:5bf2c10de162ca3fefd93ef2
-var freeze_date = new Date(2018, 11, 2, 12, 0, 0, 0, 0);
-
-function days_between(date1, date2) {
-
-    // The number of milliseconds in one day
-    var ONE_DAY = 1000 * 60 * 60 * 24;
-
-    // Convert both dates to milliseconds
-    var date1_ms = date1.getTime();
-    var date2_ms = date2.getTime();
-
-    // Calculate the difference in milliseconds
-    var difference_ms = Math.abs(date1_ms - date2_ms);
-
-    // Convert back to days and return
-    return Math.round(difference_ms/ONE_DAY);
-
-}
 
 	  </script>
 	  
 	 </body>
   
-  </html> 
+  </html>
