@@ -38,15 +38,16 @@
 
 
 </style>
-	
-	
-	
-	</head>
+</head>
 
 
 
 <body bgcolor="black", text = "white">
 	  
+<!-- <button type = "button" onclick="connectToTrello()">Authorize</button> -->
+
+<!-- <button type = "button" onclick="getBoards()">Get Boards</button> -->
+
 <button type = "button" onclick="get19Board()">Get 19 Board Cards</button>
 
 <button type = "button" onclick="undLos()">Starten</button>
@@ -94,7 +95,6 @@ var lists_name = [];
 
 var cards_id = [];
 
-
 var list0 = [];
 var list1 = [];
 var list2 = [];
@@ -108,13 +108,15 @@ var list9 = [];
 var list10 = [];
 var list11 = [];
 
+var general_list = [list0, list1, list2, list3, list4, list5, list6, list7, list8, list9, list10, list11];
+
 var output = [];
 var check = [];
 var content = [];
 
 var i, j, c = 0;
 
-var freeze_date = new Date(2018, 11, 2, 23, 59, 59, 59, 59);
+var freeze_date = new Date(2018, 11, 2, 18, 0, 0, 0, 0);
 
 //COUNTDOWN
 // Set the date we're counting down to
@@ -147,14 +149,14 @@ function countdown(){setInterval(function() {
   if(minutes == 1){m =' Minute '}
   else{m =' Minuten '};
 
-  // Display the result in the element with id="design_freeze"
-  document.getElementById("design_freeze").innerHTML = days + t + hours + h + minutes + m + "<br>BIS DESIGN FREEZE";
 
   // If the count down is finished, write some text 
   if (distance < 0) {
-    clearInterval(x);
+    //clearInterval(x);
     document.getElementById("design_freeze").innerHTML = "ENDE";
-  }
+  }else{
+    // Display the result in the element with id="design_freeze"
+  document.getElementById("design_freeze").innerHTML = days + t + hours + h + minutes + m + "<br>BIS DESIGN FREEZE";}
 },1000);};
 
 
@@ -208,80 +210,48 @@ var getSuccessCards = function (data) {
 	Taskviewer(data);
 }
 
-var test = [];
+var listenTest = [];
+var kartenTest = [];
+var d;
 
 function Taskviewer(data){
 for(j = 0; j <lists_id.length; j++){
 	for(i = 0; i < data.cards.length; i++){
 		if(data.cards[i].closed==false){
 			if(lists_id[j]==data.cards[i].idList){
-				//if(data.cards[i].name == 'General'){test=test.concat(j); 
-				//Trello.get("cards/" + data.cards[i].id + "/checklists", getSuccessChecklists, getFailChecklists);
-				//}
-				content = content.concat("<li>" + data.cards[i].name + "</li>");
-				if(j == 0){
-				list0 = list0.concat(content);
+				if(data.cards[i].name == 'General'){listenTest = listenTest.concat(j);
+				kartenTest = kartenTest.concat(data.cards[i].id);
 				}
-				if(j == 1){
-				list1 = list1.concat(content);
-				}
-				if(j == 2){
-				list2 = list2.concat(content);
-				}
-				if(j == 3){
-				list3 = list3.concat(content);
-				}
-				if(j == 4){
-				list4 = list4.concat(content);
-				}
-				if(j == 5){
-				list5 = list5.concat(content);
-				}
-				if(j == 6){
-				list6 = list6.concat(content);
-				}
-				if(j == 7){
-				list7 = list7.concat(content);
-				}
-				if(j == 8){
-				list8 = list8.concat(content);
-				}
-				if(j == 9){
-				list9 = list9.concat(content);
-				}
-				if(j == 10){
-				list10 = list10.concat(content);
-				}
-				if(j == 11){
-				list11 = list11.concat(content);
-				}
+				else{content = content.concat("<li>" + data.cards[i].name + "</li>")};
+				general_list[j] = general_list[j].concat(content);
 				content = [];
 				
 			}
 		}
 	}
 }
+console.log(general_list);
+d = 0;
+TaskviewerChecklists();
+//Ausgabe();
+}
 
-Ausgabe();
+function TaskviewerChecklists(){
+if(d < kartenTest.length){
+		window.Trello.get("cards/"+kartenTest[d]+"/checklists/", getSuccessChecklists, getFailCards);
+		}
+else{
+	Ausgabe();
+	}
 }
 
 
 var Ausgabe = function(){
 for(i = 0; i < 12; i++){
 document.getElementById("demo"+i).style.display = "none";
+document.getElementById("demo"+i).innerHTML=general_list[i].join("");
 }
-document.getElementById("demo0").innerHTML=list0.join("");
-document.getElementById("demo1").innerHTML=list1.join("");
-document.getElementById("demo2").innerHTML=list2.join("");
-document.getElementById("demo3").innerHTML=list3.join("");
-document.getElementById("demo4").innerHTML=list4.join("");
-document.getElementById("demo5").innerHTML=list5.join("");
-document.getElementById("demo6").innerHTML=list6.join("");
-document.getElementById("demo7").innerHTML=list7.join("");
-document.getElementById("demo8").innerHTML=list8.join("");
-document.getElementById("demo9").innerHTML=list9.join("");
-document.getElementById("demo10").innerHTML=list10.join("");
-document.getElementById("demo11").innerHTML=list11.join("");
+
 i = 0;
 startDisplay();
 }
@@ -289,7 +259,7 @@ startDisplay();
 var startDisplay = function() {
     document.getElementById("demo"+i).style.display = "block";
 	document.getElementById("liste").innerHTML=lists_name[i];
-	window.setTimeout(stopDisplay, 1000);
+	window.setTimeout(stopDisplay, 10000);
 } 
 
 var stopDisplay = function() {
@@ -306,26 +276,20 @@ var stopDisplay = function() {
 
 
 var reset = function(){
-list0 = [];
-list1 = [];
-list2 = [];
-list3 = [];
-list4 = [];
-list5 = [];
-list6 = [];
-list7 = [];
-list8 = [];
-list9 = [];
-list10 = [];
-list11 = [];
+for(i = 0; i < 12; i++){
+general_list[i] = [];
+}
 
 lists_id = [];
 lists_name = [];
 check = [];
+
+listenTest = [];
+kartenTest = [];
 }
 
 var getSuccessSonstiges = function (data) {
-	console.log('Operation successful: get Checklist');
+	console.log('Operation successful: get Sonstiges');
 	
 	for(i = 0; i < data.length; i++){
 		if(data[i].state=='incomplete'){
@@ -333,20 +297,22 @@ var getSuccessSonstiges = function (data) {
 			}
 		}
 		document.getElementById("checkliste").innerHTML=check.join("");
-	}
+}
+
 
 var getSuccessChecklists = function (data) {
 	console.log('Operation successful: get Checklist');
-	
+	console.log(JSON.stringify(data, null, 2));
+
 	for(c = 0; c < data[0].checkItems.length; c++){
 		if(data[0].checkItems[c].state=='incomplete'){
-				content = content.concat("<li>" + data[0].checkItems[c].name + "</li>");
-				//console.log(JSON.stringify(data[0].checkItems[c].name, null, 2));
-				console.log(test);
-				console.log(data[0].checkItems.length);
-		}
+				general_list[listenTest[d]] = general_list[listenTest[d]].concat("<li>" + data[0].checkItems[c].name + "</li>");
+				
 		}
 	}
+	d++;
+	TaskviewerChecklists();
+}
 
 var getFailLists = function (){
 alert('Listen konnten nicht geholt werden. Fragt nicht Yvonne warum es nicht geht, die weiss es auch nicht.');
@@ -372,7 +338,6 @@ function getBoards(){
  
 function get19Board(){
 	window.Trello.get("boards/5b9624316fe620864ed57162/cards", getSuccess, getFailCards);
-	//{window.Trello.get("cards/5ba3a0abd1c1cb792a82fece/checklists", getSuccess, getFailChecklists)}
 };
 
 	  </script>
