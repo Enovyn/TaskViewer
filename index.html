@@ -122,10 +122,15 @@ eventDate.setMilliseconds(0);
 
 var event = "";
 
+var eventExists = false;
+
 //COUNTDOWN
 
 // Update the count down every 1 minutes
-function countdown(){setInterval(function() {
+function countdown(){
+//if there is no event we don't need a countdown
+if(eventExists){
+setInterval(function() {
 // Set the date we're counting down to
 	var countDownDate = eventDate.getTime();
 
@@ -164,9 +169,15 @@ function countdown(){setInterval(function() {
 	if(distance < 259200000){
 	document.getElementById("Deadline").innerHTML = days + t + hours + h + minutes + m + "<br>BIS " + event;}
 	}
-},1000);};
+	if (distance == 0){
+	eventExists = false;
+	}
+},1000);
+}
+};
 
 
+//Authentication
 var authenticationSuccess = function() {
 	  console.log('Successful authentication'); 
 	};
@@ -186,7 +197,7 @@ var authenticationFailure = function() {
       error: authenticationFailure
     });
 	
-	
+
 var undLos = function(){
 	Trello.get("boards/5b9624316fe620864ed57162/lists/open", getSuccessLists, getFailLists);
 	var d = new Date();
@@ -233,27 +244,28 @@ function Taskviewer(data){
 					else{
 					//index is the position of the first number
 					if(data.cards[i].name.startsWith("##")){
-					index = data.cards[i].name.indexOf("0")-1;
-					if((data.cards[i].name.indexOf("1")-1 < index)&&(data.cards[i].name.indexOf("1")-1 > 0)){
-					index = data.cards[i].name.indexOf("1")-1;
-					}
-					if((data.cards[i].name.indexOf("2")-1 < index)&&(data.cards[i].name.indexOf("2")-1 > 0)){
-					index = data.cards[i].name.indexOf("2")-1;
-					}
-					if((data.cards[i].name.indexOf("3")-1 < index)&&(data.cards[i].name.indexOf("3")-1 > 0)){
-					index = data.cards[i].name.indexOf("3")-1;
-					}
-					event = data.cards[i].name.substring(2, index);
-					//takes date from the position of the first number (index) to .
-					eventDate.setDate(data.cards[i].name.substring(index, data.cards[i].name.indexOf(".")));
-					//takes month from the postiton of the first . to the second .
-					index = data.cards[i].name.indexOf(".");
-					eventDate.setMonth(data.cards[i].name.substring(index + 1, data.cards[i].name.indexOf(".", index + 1)) - 1);
-					//adjusts the year if necessary
-					var yearCheck = new Date;
-					if(yearCheck.getMonth() > eventDate.getMonth()){
-					eventDate.setFullYear(yearCheck.getFullYear() + 1);
-					}				
+						index = data.cards[i].name.indexOf("0")-1;
+						if((data.cards[i].name.indexOf("1")-1 < index)&&(data.cards[i].name.indexOf("1")-1 > 0)){
+						index = data.cards[i].name.indexOf("1")-1;
+						}
+						if((data.cards[i].name.indexOf("2")-1 < index)&&(data.cards[i].name.indexOf("2")-1 > 0)){
+						index = data.cards[i].name.indexOf("2")-1;
+						}
+						if((data.cards[i].name.indexOf("3")-1 < index)&&(data.cards[i].name.indexOf("3")-1 > 0)){
+						index = data.cards[i].name.indexOf("3")-1;
+						}
+						event = data.cards[i].name.substring(2, index);
+						//takes date from the position of the first number (index) to .
+						eventDate.setDate(data.cards[i].name.substring(index, data.cards[i].name.indexOf(".")));
+						//takes month from the postiton of the first . to the second .
+						index = data.cards[i].name.indexOf(".");
+						eventDate.setMonth(data.cards[i].name.substring(index + 1, data.cards[i].name.indexOf(".", index + 1)) - 1);
+						//adjusts the year if necessary
+						var yearCheck = new Date;
+						if(yearCheck.getMonth() > eventDate.getMonth()){
+						eventDate.setFullYear(yearCheck.getFullYear() + 1);
+						}
+						eventExists = true;						
 					}
 					content = content.concat("<li>" + data.cards[i].name + "</li>")};
 					general_list[j] = general_list[j].concat(content);
